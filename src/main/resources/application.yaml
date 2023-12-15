@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+    group:
+      dev: dev
+      prod: prod
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
