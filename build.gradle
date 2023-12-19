@@ -23,17 +23,24 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.0.1'
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '6.0.1'
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '6.0.1'
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.0.1'
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.0.1'
 }
 
 tasks.named('test') {
