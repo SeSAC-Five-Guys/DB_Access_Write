@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +21,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 public class KafkaProducerConfig {
 	/*@Value("#{'${spring.kafka.bootstrap-servers}'.split(',')}")
 	private List<String> servers;*/
-
-	@Value("${spring.kafka.bootstrap-servers}")
-	private String servers;
-
-    /*@Value("${kafka.producer.acksConfig}")
+	/*@Value("${kafka.producer.acksConfig}")
 	private String acksConfig;
 
 	@Value("${kafka.producer.retry}")
@@ -34,9 +31,10 @@ public class KafkaProducerConfig {
 	private Boolean enableIdempotence;
 	@Value("${kafka.producer.max-in-flight-requests-per-connection}")
 	private Integer maxInFlightRequestsPerConnection;*/
-
+	@Value("${spring.kafka.bootstrap-servers}")
+	private String servers;
 	@Bean
-	public ProducerFactory<String, String> producerFactory() {
+	public ProducerFactory<String, Map<String,String>> producerFactory() {
 		Map<String, Object> configProps = new HashMap<>();
 
 		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
@@ -48,9 +46,8 @@ public class KafkaProducerConfig {
 
 		return new DefaultKafkaProducerFactory<>(configProps);
 	}
-
 	@Bean
-	public KafkaTemplate<String, String> kafkaTemplate() {
+	public KafkaTemplate<String, Map<String,String>> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 }
