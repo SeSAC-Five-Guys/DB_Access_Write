@@ -1,6 +1,7 @@
 package com.sesac.db_access_write.kafka;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.sesac.db_access_write.common.dto.ResDto;
+import com.sesac.db_access_write.member.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +31,7 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 	private String deleteMemberTopic;
 
 	@Override
-	public boolean sendCreateMessage(Map<String, String> registeredMember) {
+	public boolean sendCreateMemberMsg(Map<String, String> registeredMember) {
 		try {
 			kafkaTemplate.send(createMemberTopic, registeredMember);
 			log.info("sendCreateMember Success " + registeredMember.get("nickname"));
@@ -38,5 +40,20 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 			log.error(e.getMessage());
 			return false;
 		}
+	}
+
+	@Override
+	public Map<String, String> getMemberToKafkaSendMemberMap(Member savedMember) {
+		Map<String, String> registeredMember = new HashMap<>();
+
+		registeredMember.put("memberId", savedMember.getMemberId().toString());
+		registeredMember.put("createdAt", savedMember.getCreatedAt().toString());
+		registeredMember.put("updatedAt", savedMember.getUpdatedAt().toString());
+		registeredMember.put("email", savedMember.getEmail());
+		registeredMember.put("phoneNumber", savedMember.getPhoneNumber());
+		registeredMember.put("nickname", savedMember.getNickname());
+		registeredMember.put("memberRole", savedMember.getMemberRole().toString());
+		registeredMember.put("password", savedMember.getPassword());
+		return registeredMember;
 	}
 }

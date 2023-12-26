@@ -39,20 +39,15 @@ public class MemberServiceMakeResult {
 			.build();
 	}
 
-	// HttpStatus.OK가 아닌 경우의 응답에 대해서 대응하는 ErrorCode의 HttpStatus로 변경하는 메서드
+	// 비지니스 로직 상의 응답에 대응되는 HTTP Status 반환하는 메서드
 	public HttpStatus changeStatus(ResDto response) {
-		try {
-			if (!response.isSuccess()){
-				return response.getErrorStatus().getHttpStatus();
-			}
-			return HttpStatus.OK;
-		} catch (Exception e){
-			log.warn(e.getMessage());
-			return HttpStatus.OK;
+		if (!response.isSuccess()){
+			return response.getErrorStatus().getHttpStatus();
 		}
+		return HttpStatus.OK;
 	}
 
-	// Try-Catch 중 Catch 절에서 500 에러에 대한 결과를 응답하는 메서드
+	// 비지니스 로직의 Catch 절에서 500 에러에 대한 결과를 응답하는 메서드
 	public ResDto makeInternalServerErrorResult(Exception e){
 		log.error(e.getMessage());
 		log.error(e.getStackTrace());

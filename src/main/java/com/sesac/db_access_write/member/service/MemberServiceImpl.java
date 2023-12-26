@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sesac.db_access_write.common.dto.ResDto;
 import com.sesac.db_access_write.kafka.KafkaProducerService;
+import com.sesac.db_access_write.member.dto.MemberModifyInfo;
+import com.sesac.db_access_write.member.dto.MemberSignUpInfo;
 import com.sesac.db_access_write.member.entity.Member;
 import com.sesac.db_access_write.member.entity.MemberRole;
 import com.sesac.db_access_write.member.persistence.MemberRepository;
@@ -27,46 +29,88 @@ public class MemberServiceImpl implements MemberService{
 
 	private final MemberServiceValidating validating;
 	private final MemberServiceMakeResult makeResult;
+
 	@Override
-	@Transactional
-	public ResDto signup(Map<String, String> signUpInfo) {
+	public ResDto isDuplicatedEmail(String email) {
 		try {
 			if (validating.isDuplicatedValCnt(
-				memberRepository.countByEmail(signUpInfo.get("email"))
+				memberRepository.countByEmail(email)
+			)){
+				return makeResult.makeDuplicateEmailResult();
+			} else {
+				return makeResult.makeSuccessResultNoData();
+			}
+		} catch (Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
+	@Override
+	public ResDto isDuplicatedPhoneNumber(String phoneNumber) {
+		try {
+			if (validating.isDuplicatedValCnt(
+				memberRepository.countByPhoneNumber(phoneNumber)
+			)){
+				return makeResult.makeDuplicatedPhoneNumResult();
+			} else {
+				return makeResult.makeSuccessResultNoData();
+			}
+		} catch (Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
+	@Override
+	public ResDto isDuplicatedNickname(String nickname) {
+		try {
+			if (validating.isDuplicatedValCnt(
+				memberRepository.countByNickname(nickname)
+			)){
+				return makeResult.makeDuplicatedNicknameResult();
+			} else {
+				return makeResult.makeSuccessResultNoData();
+			}
+		} catch (Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
+	@Override
+	@Transactional
+	public ResDto signup(MemberSignUpInfo memberSignUpInfo) {
+		try {
+			if (validating.isDuplicatedValCnt(
+				memberRepository.countByEmail(memberSignUpInfo.getEmail())
 			)){
 				return makeResult.makeDuplicateEmailResult();
 			}
 
 			if (validating.isDuplicatedValCnt(
-				memberRepository.countByPhoneNumber(signUpInfo.get("phoneNumber"))
+				memberRepository.countByPhoneNumber(memberSignUpInfo.getPhoneNumber())
 			)){
 				return makeResult.makeDuplicatedPhoneNumResult();
 			}
 
 			if (validating.isDuplicatedValCnt(
-				memberRepository.countByNickname(signUpInfo.get("nickname"))
+				memberRepository.countByNickname(memberSignUpInfo.getNickname())
 			)){
 				return makeResult.makeDuplicatedNicknameResult();
 			}
 
 			Member member = Member.builder()
-				.email(signUpInfo.get("email"))
-				.phoneNumber(signUpInfo.get("phoneNumber"))
-				.nickname(signUpInfo.get("nickname"))
-				.password(validating.encodingPwd(signUpInfo.get("password")))
+				.email(memberSignUpInfo.getEmail())
+				.phoneNumber(memberSignUpInfo.getPhoneNumber())
+				.nickname(memberSignUpInfo.getNickname())
+				.password(validating.encodingPwd(memberSignUpInfo.getPassword()))
 				.memberRole(Collections.singleton(MemberRole.USER_1))
 				.build();
 
 			memberRepository.save(member);
-			Member savedMember = memberRepository.findByEmail(signUpInfo.get("email"));
 
-			signUpInfo.remove("password");
-			signUpInfo.put("memberId", savedMember.getMemberId().toString());
-			signUpInfo.put("password", savedMember.getPassword());
-			signUpInfo.put("createdAt", savedMember.getCreatedAt().toString());
-			signUpInfo.put("updatedAt", savedMember.getUpdatedAt().toString());
+			Member savedMember = memberRepository.findByEmail(memberSignUpInfo.getEmail());
+			Map<String, String> registeredMember = kafkaProducerService.getMemberToKafkaSendMemberMap(savedMember);
 
-			if (!kafkaProducerService.sendCreateMessage(signUpInfo)) {
+			if (!kafkaProducerService.sendCreateMemberMsg(registeredMember)) {
 				return makeResult.makeSendingToKafkaFailedResult();
 			}
 
@@ -76,5 +120,7 @@ public class MemberServiceImpl implements MemberService{
 			return makeResult.makeInternalServerErrorResult(e);
 		}
 	}
+
+
 
 }

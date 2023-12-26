@@ -5,7 +5,13 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.sesac.db_access_write.common.dto.ResDto;
+import com.sesac.db_access_write.member.dto.MemberModifyInfo;
+import com.sesac.db_access_write.member.dto.MemberSignUpInfo;
 
 public interface MemberService {
-	ResDto signup(Map<String, String> signUpInfo);
+	ResDto isDuplicatedEmail(String email);
+	ResDto isDuplicatedPhoneNumber(String phoneNumber);
+	ResDto isDuplicatedNickname(String nickname);
+	ResDto signup(MemberSignUpInfo signUpInfo);
+
 }
