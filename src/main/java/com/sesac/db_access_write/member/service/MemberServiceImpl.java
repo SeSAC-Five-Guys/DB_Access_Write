@@ -1,7 +1,6 @@
 package com.sesac.db_access_write.member.service;
 
 import java.util.Collections;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,9 +107,10 @@ public class MemberServiceImpl implements MemberService{
 			memberRepository.save(member);
 
 			Member savedMember = memberRepository.findByEmail(memberSignUpInfo.getEmail());
-			Map<String, String> registeredMember = kafkaProducerService.getMemberToKafkaSendMemberMap(savedMember);
 
-			if (!kafkaProducerService.sendCreateMemberMsg(registeredMember)) {
+			if (!kafkaProducerService.sendCreateMemberMsg(
+				kafkaProducerService.getMemberToKafkaCreateMemberMap(savedMember)
+			)) {
 				return makeResult.makeSendingToKafkaFailedResult();
 			}
 
@@ -121,6 +121,44 @@ public class MemberServiceImpl implements MemberService{
 		}
 	}
 
+	/* 회원 정보 수정 */
+	@Override
+	@Transactional
+	public ResDto modifyMember(String email, MemberModifyInfo memberModifyInfo) {
+		try {
+			Member existMember = memberRepository.findByEmail(email);
 
+			if (validating.isChangeInfoDuplicated(
+				existMember.getPhoneNumber(),
+				memberModifyInfo.getPhoneNumber(),
+				validating.isDuplicatedValCnt(memberRepository.countByPhoneNumber(memberModifyInfo.getPhoneNumber()))
+			)){
+				return makeResult.makeDuplicatedPhoneNumResult();
+			}
+			if (validating.isChangeInfoDuplicated(
+					existMember.getNickname(),
+					memberModifyInfo.getNickname(),
+					validating.isDuplicatedValCnt(
+						memberRepository.countByNickname(memberModifyInfo.getNickname()))
+			)){
+				return makeResult.makeDuplicatedNicknameResult();
+			}
 
+			existMember.changeNickname(memberModifyInfo.getNickname());
+			existMember.changePhoneNum(memberModifyInfo.getPhoneNumber());
+
+			memberRepository.save(existMember);
+			Member savedMember = memberRepository.findByEmail(email);
+
+			if (!kafkaProducerService.sendUpdateMemberMsg(
+				kafkaProducerService.getMemberToKafkaUpdateMemberMap(savedMember)
+			)){
+				return makeResult.makeSendingToKafkaFailedResult();
+			}
+
+			return makeResult.makeSuccessResultNoData();
+		}catch (Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
 }

@@ -43,7 +43,24 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 	}
 
 	@Override
-	public Map<String, String> getMemberToKafkaSendMemberMap(Member savedMember) {
+	public boolean sendUpdateMemberMsg(Map<String, String> modifiedMember) {
+		try {
+			kafkaTemplate.send(updateMemberTopic, modifiedMember);
+			log.info("sendCreateMember Success " + modifiedMember.get("nickname"));
+			return true;
+		} catch (Exception e){
+			log.error(e.getMessage());
+			return false;
+		}
+	}
+
+	@Override
+	public boolean sendDeletedMemberMsg(Map<String, String> deletedMember) {
+		return false;
+	}
+
+	@Override
+	public Map<String, String> getMemberToKafkaCreateMemberMap(Member savedMember) {
 		Map<String, String> registeredMember = new HashMap<>();
 
 		registeredMember.put("memberId", savedMember.getMemberId().toString());
@@ -54,6 +71,19 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 		registeredMember.put("nickname", savedMember.getNickname());
 		registeredMember.put("memberRole", savedMember.getMemberRole().toString());
 		registeredMember.put("password", savedMember.getPassword());
+
 		return registeredMember;
 	}
+
+	@Override
+	public Map<String, String> getMemberToKafkaUpdateMemberMap(Member savedMember) {
+		Map<String, String> modifiedMember = new HashMap<>();
+
+		modifiedMember.put("email", savedMember.getEmail());
+		modifiedMember.put("phoneNumber", savedMember.getPhoneNumber());
+		modifiedMember.put("nickname", savedMember.getNickname());
+
+		return modifiedMember;
+	}
+
 }

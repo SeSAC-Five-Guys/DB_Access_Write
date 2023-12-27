@@ -14,4 +14,5 @@ public interface MemberService {
 	ResDto isDuplicatedNickname(String nickname);
 	ResDto signup(MemberSignUpInfo signUpInfo);
 
+	ResDto modifyMember(String email, MemberModifyInfo memberModifyInfo);
 }

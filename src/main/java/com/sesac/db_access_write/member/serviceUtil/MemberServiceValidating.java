@@ -15,13 +15,13 @@ public class MemberServiceValidating {
 		return valueCnt != 0L;
 	}
 
-	public boolean isChangeNickNameDuplicated(String currentNickname, String changeNickname, boolean existNickname){
+	public boolean isChangeInfoDuplicated(String currentData, String changeData, boolean existData){
 		boolean result = false;
 
-		// 현재 닉네임과 변경할 닉네임이 일치하지 않고
-		if(!currentNickname.equals(changeNickname)){
-			// 변경할 닉네임이 중복된다면 닉네임 중복으로 변경 불가
-			if(existNickname){
+		// 현재 데이터와 변경할 데이터가  일치하지 않고
+		if(!currentData.equals(changeData)){
+			// 변경할 데이터가 중복된다면 데이터 중복으로 변경 불가
+			if(existData){
 				result = true;
 			}
 		}
