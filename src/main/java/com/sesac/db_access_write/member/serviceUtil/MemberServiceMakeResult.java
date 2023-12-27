@@ -50,7 +50,7 @@ public class MemberServiceMakeResult {
 	// 비지니스 로직의 Catch 절에서 500 에러에 대한 결과를 응답하는 메서드
 	public ResDto makeInternalServerErrorResult(Exception e){
 		log.error(e.getMessage());
-		log.error(e.getStackTrace());
+		log.error(e.getCause());
 		return ResDto.builder()
 			.success(false)
 			.errorStatus(ErrorStatus.INTERNAL_SERVER_ERROR)

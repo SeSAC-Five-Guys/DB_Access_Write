@@ -1,15 +1,14 @@
 package com.sesac.db_access_write.kafka;
 
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.sesac.db_access_write.common.dto.ResDto;
 import com.sesac.db_access_write.member.entity.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -46,7 +45,7 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 	public boolean sendUpdateMemberMsg(Map<String, String> modifiedMember) {
 		try {
 			kafkaTemplate.send(updateMemberTopic, modifiedMember);
-			log.info("sendCreateMember Success " + modifiedMember.get("nickname"));
+			log.info("sendUpdateMember Success " + modifiedMember.get("nickname"));
 			return true;
 		} catch (Exception e){
 			log.error(e.getMessage());
@@ -56,7 +55,14 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 
 	@Override
 	public boolean sendDeletedMemberMsg(Map<String, String> deletedMember) {
-		return false;
+		try {
+			kafkaTemplate.send(deleteMemberTopic, deletedMember);
+			log.info("send DeleteMember Success " + deletedMember.get("nickname"));
+			return true;
+		} catch (Exception e){
+			log.error(e.getMessage());
+			return false;
+		}
 	}
 
 	@Override
@@ -66,6 +72,7 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 		registeredMember.put("memberId", savedMember.getMemberId().toString());
 		registeredMember.put("createdAt", savedMember.getCreatedAt().toString());
 		registeredMember.put("updatedAt", savedMember.getUpdatedAt().toString());
+		registeredMember.put("deletedAt", "");
 		registeredMember.put("email", savedMember.getEmail());
 		registeredMember.put("phoneNumber", savedMember.getPhoneNumber());
 		registeredMember.put("nickname", savedMember.getNickname());
@@ -84,6 +91,17 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 		modifiedMember.put("nickname", savedMember.getNickname());
 
 		return modifiedMember;
+	}
+
+	@Override
+	public Map<String, String> getMemberToKafkaDeleteMemberMap(Member savedMember) {
+		Map<String, String> deletedMember = new HashMap<>();
+
+		deletedMember.put("email", savedMember.getEmail());
+		deletedMember.put("nickname", savedMember.getNickname());
+		deletedMember.put("deletedAt", savedMember.getDeletedAt().toString());
+
+		return deletedMember;
 	}
 
 }

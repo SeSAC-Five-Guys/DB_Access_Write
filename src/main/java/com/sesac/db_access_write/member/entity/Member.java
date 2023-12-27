@@ -33,11 +33,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString(exclude = {"role", /*"memberImage"*/})
+@ToString(exclude = {"role"})
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "deleted_at is NULL")
 @SQLDelete(sql = "update member set deleted_at = CURRENT_TIMESTAMP where member_id = ?")
 @Table(name = "member")
 @Entity

@@ -12,7 +12,7 @@ public interface MemberService {
 	ResDto isDuplicatedEmail(String email);
 	ResDto isDuplicatedPhoneNumber(String phoneNumber);
 	ResDto isDuplicatedNickname(String nickname);
-	ResDto signup(MemberSignUpInfo signUpInfo);
-
+	ResDto createMember(MemberSignUpInfo signUpInfo);
 	ResDto modifyMember(String email, MemberModifyInfo memberModifyInfo);
+	ResDto deleteMember(String email);
 }

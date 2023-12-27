@@ -1,5 +1,6 @@
 package com.sesac.db_access_write.kafka;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -22,4 +23,7 @@ public interface KafkaProducerService {
 
 	// 변경된 회원의 정보를 Kafka 로 보낼 데이터로 변경하는 메서드
 	Map<String, String> getMemberToKafkaUpdateMemberMap(Member savedMember);
+
+	// 삭제된 회원의 정보를 Kafka 로 보낼 데이터로 변경하는 메서드
+	Map<String, String> getMemberToKafkaDeleteMemberMap(Member savedMember);
 }

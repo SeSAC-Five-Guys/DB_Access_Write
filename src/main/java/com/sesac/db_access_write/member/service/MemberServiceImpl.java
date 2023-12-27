@@ -1,5 +1,6 @@
 package com.sesac.db_access_write.member.service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.springframework.stereotype.Service;
@@ -76,7 +77,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	@Transactional
-	public ResDto signup(MemberSignUpInfo memberSignUpInfo) {
+	public ResDto createMember(MemberSignUpInfo memberSignUpInfo) {
 		try {
 			if (validating.isDuplicatedValCnt(
 				memberRepository.countByEmail(memberSignUpInfo.getEmail())
@@ -106,7 +107,7 @@ public class MemberServiceImpl implements MemberService{
 
 			memberRepository.save(member);
 
-			Member savedMember = memberRepository.findByEmail(memberSignUpInfo.getEmail());
+			Member savedMember = memberRepository.findByEmailAndDeletedAtIsNull(memberSignUpInfo.getEmail());
 
 			if (!kafkaProducerService.sendCreateMemberMsg(
 				kafkaProducerService.getMemberToKafkaCreateMemberMap(savedMember)
@@ -126,12 +127,13 @@ public class MemberServiceImpl implements MemberService{
 	@Transactional
 	public ResDto modifyMember(String email, MemberModifyInfo memberModifyInfo) {
 		try {
-			Member existMember = memberRepository.findByEmail(email);
+			Member existMember = memberRepository.findByEmailAndDeletedAtIsNull(email);
 
 			if (validating.isChangeInfoDuplicated(
 				existMember.getPhoneNumber(),
 				memberModifyInfo.getPhoneNumber(),
-				validating.isDuplicatedValCnt(memberRepository.countByPhoneNumber(memberModifyInfo.getPhoneNumber()))
+				validating.isDuplicatedValCnt(
+					memberRepository.countByPhoneNumber(memberModifyInfo.getPhoneNumber()))
 			)){
 				return makeResult.makeDuplicatedPhoneNumResult();
 			}
@@ -148,7 +150,7 @@ public class MemberServiceImpl implements MemberService{
 			existMember.changePhoneNum(memberModifyInfo.getPhoneNumber());
 
 			memberRepository.save(existMember);
-			Member savedMember = memberRepository.findByEmail(email);
+			Member savedMember = memberRepository.findByEmailAndDeletedAtIsNull(email);
 
 			if (!kafkaProducerService.sendUpdateMemberMsg(
 				kafkaProducerService.getMemberToKafkaUpdateMemberMap(savedMember)
@@ -157,6 +159,29 @@ public class MemberServiceImpl implements MemberService{
 			}
 
 			return makeResult.makeSuccessResultNoData();
+		}catch (Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
+	/* 회원 정보 삭제 */
+	@Override
+	@Transactional
+	public ResDto deleteMember(String email) {
+		try {
+			Member deletingMember = memberRepository.findByEmailAndDeletedAtIsNull(email);
+			log.info(deletingMember);
+			deletingMember.setDeletedAt(LocalDateTime.now());
+			memberRepository.save(deletingMember);
+
+			if(!kafkaProducerService.sendDeletedMemberMsg(
+				kafkaProducerService.getMemberToKafkaDeleteMemberMap(deletingMember)))
+			{
+				return makeResult.makeSendingToKafkaFailedResult();
+			}
+
+			return makeResult.makeSuccessResultNoData();
+
 		}catch (Exception e){
 			return makeResult.makeInternalServerErrorResult(e);
 		}
