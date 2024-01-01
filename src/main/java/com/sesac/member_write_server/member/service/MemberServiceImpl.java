@@ -102,7 +102,7 @@ public class MemberServiceImpl implements MemberService{
 				.phoneNumber(memberSignUpInfo.getPhoneNumber())
 				.nickname(memberSignUpInfo.getNickname())
 				.password(validating.encodingPwd(memberSignUpInfo.getPassword()))
-				.memberRole(Collections.singleton(MemberRole.USER_1))
+				.memberRole(Collections.singleton(MemberRole.USER))
 				.build();
 
 			memberRepository.save(member);

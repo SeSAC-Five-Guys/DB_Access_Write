@@ -33,7 +33,7 @@ import lombok.ToString;
 @Entity
 public class Member extends BaseTimeEntity {
 	@Id
-	@Column(nullable = false)
+	@Column(name = "member_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
 
@@ -51,7 +51,7 @@ public class Member extends BaseTimeEntity {
 
 	@ElementCollection(fetch = FetchType.LAZY)
 	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "email"))
+	@CollectionTable(name = "member_roles", joinColumns = @JoinColumn(referencedColumnName = "email"))
 	@Column(nullable = false)
 	private Set<MemberRole> memberRole;
 
