@@ -18,6 +18,10 @@ public class WebConfig implements WebMvcConfigurer {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
+
+		// 개발 환경
+		config.addAllowedOrigin("*");
+
 		config.addAllowedOrigin(clientAddr);
 		config.addAllowedOrigin(authAddr);
 		config.addAllowedMethod("*");

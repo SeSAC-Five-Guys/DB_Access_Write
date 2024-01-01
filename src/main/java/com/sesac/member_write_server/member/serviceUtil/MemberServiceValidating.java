@@ -32,9 +32,4 @@ public class MemberServiceValidating {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder.encode(rawPassword);
 	}
-
-	public boolean isMatch(String rawPassword, String encodedPassword){
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder.matches(rawPassword, encodedPassword);
-	}
 }

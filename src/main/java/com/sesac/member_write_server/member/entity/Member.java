@@ -37,7 +37,7 @@ public class Member extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberId;
 
-	@Column(nullable = false, length = 100, unique = true)
+	@Column(name = "email", nullable = false, length = 100, unique = true)
 	private String email;
 
 	@Column(nullable = false, length = 100, unique = true)
@@ -51,7 +51,7 @@ public class Member extends BaseTimeEntity {
 
 	@ElementCollection(fetch = FetchType.LAZY)
 	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
+	@CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "email"))
 	@Column(nullable = false)
 	private Set<MemberRole> memberRole;
 
