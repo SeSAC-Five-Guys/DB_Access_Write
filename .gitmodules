@@ -1,3 +1,3 @@
-[submodule "Member_Write_Security"]
-	path = Member_Write_Security
+[submodule "src/main/resources/Security"]
+	path = src/main/resources/Security
 	url = https://github.com/SeSAC-Five-Guys/Member_Write_Security.git
