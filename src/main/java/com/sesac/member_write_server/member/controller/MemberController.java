@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sesac.member_write_server.common.dto.ResDto;
 import com.sesac.member_write_server.member.dto.MemberModifyInfo;
 import com.sesac.member_write_server.member.dto.MemberSignUpInfo;
+import com.sesac.member_write_server.member.service.MailService;
 import com.sesac.member_write_server.member.service.MemberService;
 import com.sesac.member_write_server.member.serviceUtil.MemberServiceMakeResult;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,9 +28,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/v1/members")
+@RequestMapping("/api/v1/members")
 public class MemberController {
 	private final MemberService memberService;
+	private final MailService mailService;
 	private final MemberServiceMakeResult makeResult;
 
 	/* 회원 가입 및 그 절차를 위한 중복 확인 및 유효성 검사*/
@@ -69,15 +72,31 @@ public class MemberController {
 		HttpStatus status = makeResult.changeStatus(response);
 		return new ResponseEntity<>(response, status);
 	}
+	/* 회원 가입 시 이메일 본인 인증 */
+	@GetMapping("/authentication/{email}")
+	public ResponseEntity<ResDto> memberCreateInMailAuth(
+		HttpServletRequest httpServletRequest,
+		@Valid
+		@Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[A-Za-z]+$", message = "잘못된 이메일 형식")
+		@Size(max = 100, message = "이메일 길이 초과")
+		@NotBlank(message = "이메일 공백 포함 불가")
+		@PathVariable("email") String email
+	) throws Exception{
+		ResDto response = mailService.sendMail(email);
+		HttpStatus status = makeResult.changeStatus(response);
+		return new ResponseEntity<>(response, status);
+	}
 
+	/* 회원 가입 */
 	@PostMapping("/member")
-	public ResponseEntity<ResDto> MemberCreateAndSendMQ(
+	public ResponseEntity<ResDto> memberCreateAndSendMQ(
 		@Valid @RequestBody MemberSignUpInfo memberSignUpInfo
 	){
 		ResDto response = memberService.createMember(memberSignUpInfo);
 		HttpStatus status = makeResult.changeStatus(response);
 		return new ResponseEntity<>(response, status);
 	}
+
 
 	/* 회원 정보 수정 */
 	@PutMapping("/member/{email}")
