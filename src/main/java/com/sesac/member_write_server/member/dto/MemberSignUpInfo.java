@@ -18,11 +18,11 @@ public class MemberSignUpInfo {
 	@NotBlank(message = "핸드폰 번호 공백 포함 불가")
 	private String phoneNumber;
 
-	@Pattern(regexp = "^[^!@#_]{5,12}$", message = "잘못된 닉네임 형식")
+	@Pattern(regexp =  "^(?=.[가-힣a-zA-Z])[-가-힣a-zA-Z0-9!@#$%&]{5,12}$|(?=.[가-힣])[-가-힣0-9!@#$%&]{5,12}$|(?=.*[a-zA-Z])[-a-zA-Z0-9!@#$%&]{5,12}$", message = "잘못된 닉네임 형식")
 	@NotBlank(message = "닉네임 공백 포함 불가")
 	private String nickname;
 
-	@Pattern(regexp = "^[^!@#_]{5,12}$", message = "잘못된 비밀번호 형식")
+	@Pattern(regexp =  "^(?=.*[0-9a-zA-Z!@#$%&])[-0-9a-zA-Z!@#$%&]{6,12}$", message = "잘못된 비밀번호 형식")
 	@NotBlank(message = "비밀번호 공백 포함 불가")
 	private String password;
 }
