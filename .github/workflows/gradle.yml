@@ -36,7 +36,7 @@ jobs:
     - name: Release Create
       uses: actions/create-release@v1
       with:
-        token: ${{env.GIT_TOKEN}}
+        owner: ${{env.GIT_TOKEN}}
         tag_name: ${{env.TAG_NAME}}
         release_name: ${{env.TAG_NAME}}
         
