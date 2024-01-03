@@ -1,4 +1,3 @@
-# Docker ENV-2
 spring:
   config:
     import:
