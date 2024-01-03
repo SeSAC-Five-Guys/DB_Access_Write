@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@PropertySource("classpath:application-dev.yaml")
+@PropertySource("classpath:application-docker.yaml")
 public class MailSenderConfig {
 	@Value("${spring.mail.host}")
 	private String host;
