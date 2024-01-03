@@ -26,8 +26,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        token: ${{ env.GITHUB_TOKEN }}
         submodules: true
+      env: 
+        GITHUB_TOKEN: ${{ env.GIT_TOKEN }}
+        
           
     - name: Version Info extraction
       run : |
