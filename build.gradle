@@ -46,10 +46,11 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-processResources.dependsOn('copySubmodule')
+//processResources.dependsOn('copySubmodule')
 
+/*
 task copySubmodule(type: Copy) {
     from './src/main/resources/Security'
     include '*.yaml'
     into './src/main/resources'
-}
+}*/
