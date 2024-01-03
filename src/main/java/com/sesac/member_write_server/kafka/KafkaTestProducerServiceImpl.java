@@ -1,3 +1,4 @@
+/*
 package com.sesac.member_write_server.kafka;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -19,3 +20,4 @@ public class KafkaTestProducerServiceImpl {
 		kafkaTestTemplate.send(testTopic, message);
 	}
 }
+*/

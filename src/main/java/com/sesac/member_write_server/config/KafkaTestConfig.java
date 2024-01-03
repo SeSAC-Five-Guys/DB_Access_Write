@@ -1,3 +1,4 @@
+/*
 package com.sesac.member_write_server.config;
 
 import java.util.HashMap;
@@ -17,9 +18,12 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @EnableKafka
 @Configuration
 public class KafkaTestConfig {
-	/*@Value("#{'${spring.kafka.bootstrap-servers}'.split(',')}")
-	private List<String> servers;*/
-	/*@Value("${kafka.producer.acksConfig}")
+	*/
+/*@Value("#{'${spring.kafka.bootstrap-servers}'.split(',')}")
+	private List<String> servers;*//*
+
+	*/
+/*@Value("${kafka.producer.acksConfig}")
 	private String acksConfig;
 
 	@Value("${kafka.producer.retry}")
@@ -28,7 +32,8 @@ public class KafkaTestConfig {
 	@Value("${kafka.producer.enable-idempotence}")
 	private Boolean enableIdempotence;
 	@Value("${kafka.producer.max-in-flight-requests-per-connection}")
-	private Integer maxInFlightRequestsPerConnection;*/
+	private Integer maxInFlightRequestsPerConnection;*//*
+
 	@Value("${spring.kafka.bootstrap-servers}")
 	private String servers;
 
@@ -46,3 +51,4 @@ public class KafkaTestConfig {
 		return new KafkaTemplate<>(producerTestFactory());
 	}
 }
+*/

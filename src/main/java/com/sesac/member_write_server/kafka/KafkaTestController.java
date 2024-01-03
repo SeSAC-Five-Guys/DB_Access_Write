@@ -1,3 +1,4 @@
+/*
 package com.sesac.member_write_server.kafka;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,3 +25,4 @@ public class KafkaTestController {
 		return "Success send Msg: " + message;
 	}
 }
+*/
