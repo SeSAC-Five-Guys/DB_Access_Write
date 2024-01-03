@@ -12,7 +12,7 @@ permissions:
 env:
   GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
   GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
-  GIT_TOKEN: ${{secrets.GIT.TOKEN}}
+  GIT_TOKEN: ${{secrets.GIT_TOKEN}}
 
   DOCKER_REGISTRY: docker.io
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
