@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
     
-permissions:
-  contents: read
-  
 env:
   GIT_USER_NAME: ${{secrets.GIT_USER_NAME}}
   GIT_USER_EMAIL: ${{secrets.GIT_USER_EMAIL}}
@@ -24,12 +21,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
+        token: ${{env.GIT_TOKEN}}
         submodules: true
-      env: 
-        GITHUB_TOKEN: ${{ env.GIT_TOKEN }}
-        
           
     - name: Version Info extraction
       run : |
