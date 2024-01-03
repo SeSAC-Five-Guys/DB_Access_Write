@@ -24,7 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString(exclude = {"role"})
+@ToString(exclude = {"memberRole"})
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
