@@ -5,6 +5,3 @@ spring:
       - classpath:Security/application-docker.yaml
       - classpath:Security/application-dev.yaml
       - classpath:Security/application.yaml
-logging:
-  level:
-    org.hibernate.type.descriptor.sql: trace
