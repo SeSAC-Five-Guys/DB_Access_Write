@@ -35,6 +35,7 @@ jobs:
       
     - name: Release Create
       uses: actions/create-release@v1
+      if: "!contains(github.event.repository.releases.*.tag_name, '${{env.TAG_NAME}}')"
       with:
         tag_name: ${{env.TAG_NAME}}
         release_name: ${{env.TAG_NAME}}
