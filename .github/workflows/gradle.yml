@@ -67,6 +67,6 @@ jobs:
       with:
         context: ${{env.DOCKER_BUILD_CONTEXT}}
         push: true
-        tag: |
+        tags: |
           ${{env.DOCKER_REGISTRY}}/${{env.DOCKER_USERNAME}}/${{env.DOCKER_IMAGENAME}}:latest
           ${{env.DOCKER_REGISTRY}}/${{env.DOCKER_USERNAME}}/${{env.DOCKER_IMAGENAME}}:${{env.TAG_NAME}}
