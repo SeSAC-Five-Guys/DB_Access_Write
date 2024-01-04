@@ -76,7 +76,7 @@ jobs:
       with:
         repository: SeSAC-Five-Guys/CI-CD_Resource
         path: /home/runner/work/Member_Write/Member_Write
-        token: ${{ env.GITHUB_TOKEN }}
+        token: ${{ env.GIT_TOKEN }}
           
     - name: Update the tag in ArgoCD WebHook Git repository
       run: |
