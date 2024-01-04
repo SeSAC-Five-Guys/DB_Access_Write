@@ -75,12 +75,12 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: SeSAC-Five-Guys/CI-CD_Resource
-        path: /home/runner/work/CI-CD_Resource/CI-CD_Resource
+        path: /home/runner/work/Member_Write/Member_Write
         token: ${{ env.GITHUB_TOKEN }}
           
     - name: Update the tag in ArgoCD WebHook Git repository
       run: |
-          cd /home/runner/work/CI-CD_Resource/CI-CD_Resource &&
+          cd /home/runner/work/Member_Write/Member_Write &&
           cd BE_Application &&
           sed -i "s|# Member_Write_.*|# Member_Write_${{env.TAG_NAME}}|" Member_Write_Test.yaml &&
           git config --global user.email "${{env.GIT_USER_EMAIL}}" &&
