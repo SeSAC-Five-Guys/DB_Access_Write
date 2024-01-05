@@ -83,7 +83,7 @@ jobs:
       run: |
           cd /home/runner/work/Member_Write/Member_Write &&
           cd BE_Application &&
-          sed -i "s|# Member_Write_.*|# Member_Write_${{ github.sha }}|" Member_Write_Test.yaml &&
+          sed -i "s|# Member_Write_.*|# Member_Write_${{ github.sha }}|" Member_Write.yaml &&
           git config --global user.email "${{env.GIT_USER_EMAIL}}" &&
           git config --global user.name "${{env.GIT_USER_NAME}}" &&  
           git commit -am "🔨 change: image tag comment" &&
