@@ -9,6 +9,8 @@ public interface MemberService {
 	ResDto isDuplicatedPhoneNumber(String phoneNumber);
 	ResDto isDuplicatedNickname(String nickname);
 	ResDto createMember(MemberSignUpInfo signUpInfo);
+	ResDto isDuplicatedNicknameInModify(String currentNick, String changeNick);
+	ResDto isDuplicatedPhoneNumInModify(String currentPhoneNum, String changePhoneNum);
 	ResDto modifyMember(String email, MemberModifyInfo memberModifyInfo);
 	ResDto deleteMember(String email);
 }
