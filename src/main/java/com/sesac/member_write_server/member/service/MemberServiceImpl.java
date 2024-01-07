@@ -122,6 +122,40 @@ public class MemberServiceImpl implements MemberService{
 		}
 	}
 
+	@Override
+	public ResDto isDuplicatedNicknameInModify(String currentNick, String changeNick) {
+		try {
+			if (validating.isChangeInfoDuplicated(
+				currentNick,
+				changeNick,
+				validating.isDuplicatedValCnt(
+					memberRepository.countByNickname(changeNick))
+			)){
+				return makeResult.makeDuplicatedNicknameResult();
+			}
+			return makeResult.makeSuccessResultNoData();
+		} catch(Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
+	@Override
+	public ResDto isDuplicatedPhoneNumInModify(String currentPhoneNum, String changePhoneNum) {
+		try {
+			if (validating.isChangeInfoDuplicated(
+				currentPhoneNum,
+				changePhoneNum,
+				validating.isDuplicatedValCnt(
+					memberRepository.countByNickname(changePhoneNum))
+			)){
+				return makeResult.makeDuplicatedNicknameResult();
+			}
+			return makeResult.makeSuccessResultNoData();
+		} catch(Exception e){
+			return makeResult.makeInternalServerErrorResult(e);
+		}
+	}
+
 	/* 회원 정보 수정 */
 	@Override
 	@Transactional
