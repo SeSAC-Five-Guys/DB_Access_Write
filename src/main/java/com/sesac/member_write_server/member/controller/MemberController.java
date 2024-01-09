@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/members")
+@RequestMapping("/api/write/v1/members")
 public class MemberController {
 	private final MemberService memberService;
 	private final MailService mailService;
