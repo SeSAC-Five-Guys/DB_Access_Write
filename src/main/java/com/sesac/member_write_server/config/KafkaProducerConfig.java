@@ -32,24 +32,24 @@ public class KafkaProducerConfig {
 	private Boolean enableIdempotence;
 	@Value("${kafka.producer.max-in-flight-requests-per-connection}")
 	private Integer maxInFlightRequestsPerConnection;*/
-	@Value("${spring.kafka.bootstrap-servers}")
-	private String servers;
-	@Bean
-	public ProducerFactory<String, Map<String,String>> producerFactory() {
-		Map<String, Object> configProps = new HashMap<>();
+		@Value("${spring.kafka.bootstrap-servers}")
+		private String servers;
+		@Bean
+		public ProducerFactory<String, Map<String,String>> producerFactory() {
+			Map<String, Object> configProps = new HashMap<>();
 
-		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
-		log.warn(servers);
-		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-		/*configProps.put(ProducerConfig.RETRIES_CONFIG, retry);
-		configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
-		configProps.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInFlightRequestsPerConnection);*/
+			configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
+			log.warn(servers);
+			configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+			configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+			/*configProps.put(ProducerConfig.RETRIES_CONFIG, retry);
+			configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
+			configProps.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInFlightRequestsPerConnection);*/
 
-		return new DefaultKafkaProducerFactory<>(configProps);
-	}
-	@Bean
-	public KafkaTemplate<String, Map<String,String>> kafkaTemplate() {
-		return new KafkaTemplate<>(producerFactory());
-	}
+			return new DefaultKafkaProducerFactory<>(configProps);
+		}
+		@Bean
+		public KafkaTemplate<String, Map<String,String>> kafkaTemplate() {
+			return new KafkaTemplate<>(producerFactory());
+		}
 }
